@@ -26,7 +26,7 @@
             <p
               class="text-5xl font-bold tracking-normal leading-16 hover:text-amber-300 transition ease-linear duration-150"
             >
-              {{store.passage.number}} {{ store.passage?.verse }}
+              {{store.passage?.number}} {{ store.passage?.verse }}
             </p>
           </div>
         </div>
