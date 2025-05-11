@@ -22,6 +22,11 @@
                   {{item?.number}} - {{ item?.verse }}
               </p>
           </div>
+          <div v-else-if="store.passage?.vers" class="px-8 flex flex-col gap-12">
+              <p v-for="item in store.passage?.vers" :key="item?.id" class="text-5xl font-bold tracking-normal leading-16 hover:text-amber-300 transition ease-linear duration-150">
+                  {{item?.number}} - {{ item?.verse }}
+              </p>
+          </div>
           <div v-else class="px-8 flex flex-col gap-12">
             <p
               class="text-5xl font-bold tracking-normal leading-16 hover:text-amber-300 transition ease-linear duration-150"
