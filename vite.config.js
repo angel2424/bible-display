@@ -12,7 +12,9 @@ export default defineConfig({
     vue(),
     vueDevTools(),
     tailwindcss(),
-    VitePWA({ registerType: 'autoUpdate' })
+    VitePWA({ registerType: 'autoUpdate', devOptions: {
+      enabled: true
+    } })
   ],
   resolve: {
     alias: {
