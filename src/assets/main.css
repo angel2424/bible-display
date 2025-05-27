@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+html {
+
+}
+
+body {
+  box-sizing: border-box;
+}
+
+select::picker-icon {
+  margin-right: 2rem;
+}
