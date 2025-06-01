@@ -7,6 +7,12 @@
     </div>
     <div class="max-w-[1600px] mx-auto">
       <div class="p-8">
+          <!-- <div>
+            <div class="flex items-center gap-4 mb-8">
+              <img src="/public/favicon-white.svg" alt="logo" class="w-12 h-12" />
+              <h1 class="text-2xl font-bold text-white">Bible Display</h1>
+            </div>
+          </div> -->
           <form class="flex flex-col gap-4 mb-8" @submit.prevent="getScripture">
             <div class="flex flex-col lg:flex-row gap-4">
                 <div class="grid shrink-0 grid-cols-1 focus-within:relative">
