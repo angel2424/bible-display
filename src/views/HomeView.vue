@@ -1,69 +1,92 @@
 <template>
-  <main class="bg-gradient-to-r from-[#9bafd9] to-[#103783] w-full min-h-screen pt-5">
-    <div class="absolute bottom-8 right-8 bg-white w-fit z-50 rounded-full flex">
-      <button @click="decreaseFontSize" class="py-2 px-5 cursor-pointer hover:bg-blue-700/15 text-xl">-</button>
+  <main class="w-full min-h-screen pt-5">
+    <div class="fixed bottom-8 right-8 bg-white inset-shadow-sm/40 shadow-black/20 w-fit z-50 rounded-full flex">
+      <button @click="decreaseFontSize" class="py-2 px-5 cursor-pointer hover:bg-blue-700/15 text-xl rounded-l-full">-</button>
       <span class="h-full w-[4px] bg-gray-500"></span>
-      <button @click="increaseFontSize" class="py-2 px-5 cursor-pointer hover:bg-blue-700/15 text-xl">+</button>
+      <button @click="increaseFontSize" class="py-2 px-5 cursor-pointer hover:bg-blue-700/15 text-xl rounded-r-full">+</button>
     </div>
-    <div class="max-w-[1600px] mx-auto">
-      <div class="p-8">
-          <!-- <div>
+    <div class="max-w-[1600px] mx-auto pt-28">
+      <div class="p-8 xl:fixed z-[9] bg-white w-full top-0 left-0">
+        <header class="max-w-[1600px] mx-auto flex flex-col xl:flex-row items-center justify-between gap-8">
+          <div>
             <div class="flex items-center gap-4 mb-8">
-              <img src="/public/favicon-white.svg" alt="logo" class="w-12 h-12" />
-              <h1 class="text-2xl font-bold text-white">Bible Display</h1>
+              <img src="/public/favicon-dark.svg" alt="logo" class="w-12 h-12" />
+              <h1 class="text-2xl font-black text-gray-700">Bible Display</h1>
             </div>
-          </div> -->
-          <form class="flex flex-col gap-4 mb-8" @submit.prevent="getScripture">
-            <div class="flex flex-col lg:flex-row gap-4">
-                <div class="grid shrink-0 grid-cols-1 focus-within:relative">
-                  <select v-model="store.selectedBook" class="border border-white text-white py-2 px-4 rounded-xl col-start-1 row-start-1 w-full appearance-none pr-7 pl-3.5 text-base sm:text-sm/6">
-                    <option v-for="book in store?.books" :key="book.abrev" :value="book.abrev">{{ book.name }}</option>
-                  </select>
-                  <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="#fff" aria-hidden="true" data-slot="icon">
-                    <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                  </svg>
-                </div>
+          </div>
+          <form class="flex flex-col gap-4" @submit.prevent="getScripture">
+            <div class="flex flex-col lg:flex-row gap-4 w-full xl:w-auto">
 
-                  <input v-model="store.selectedChapter" type="number" min="1" placeholder="Chapter" class="border border-white text-white py-2 px-4 w-full lg:w-24 rounded-xl" />
+                  <BookDialog :oldTestament="store?.oldTestament" :newTestament="store?.newTestament" :selectedBook="store?.selectedBook" @selectBook="onSelectBook" @isOpen="onIsOpen" />
 
+                  <NumberField v-model="store.selectedChapter">
+                    <NumberFieldContent class="flex items-center">
+                      <NumberFieldDecrement class="hover:text-blue-700"/>
+                      <NumberFieldInput ref="chapterInputRef" />
+                      <NumberFieldIncrement />
+                    </NumberFieldContent>
+                  </NumberField>
                   <div class="flex gap-3">
-                    <input v-model="store.selectedVerse" type="text" placeholder="Or search keywords..." class="border border-white text-white p-2 rounded-xl flex-1" />
-                    <button type="submit" :disabled="isFormEmpty" class="bg-white text-blue-600 p-2 rounded w-32 hover:bg-transparent hover:border hover:border-white hover:text-white transition-all ease-linear duration-200 cursor-pointer">Search</button>
+                    <input v-model="store.selectedVerse" type="text" placeholder="Or search keywords..." class="border border-gray-700 text-gray-700 py-2 px-4 rounded-xl flex-1" />
+                    <button type="submit" :disabled="isFormEmpty" class="bg-gray-700 text-white p-2 rounded-full w-32 hover:bg-transparent hover:border hover:border-gray-700 hover:text-gray-700 transition-all ease-linear duration-200 cursor-pointer">Search</button>
                   </div>
                 </div>
           </form>
+        </header>
       </div>
-      <div class="text-white hover:cursor-none mt-12 pb-36">
+      <div class="text-gray-600 hover:cursor-text mt-12 pb-36" v-if="!loading">
         <div v-if="isPassageVisible && store.passage.length > 0" class="px-8 flex flex-col gap-12">
-            <p v-for="item in store.passage" :key="item?.id" class="font-bold tracking-normal hover:text-amber-300 transition-all ease-linear duration-150"
+            <p v-for="item in store.passage" :key="item?.id" class="font-bold tracking-normal hover:text-blue-600 transition-all ease-linear duration-150"
             :style="{fontSize: `${fontSize}rem`}">
                 {{item?.number}} - {{ item?.verse }}
             </p>
         </div>
         <div v-else-if="store.passage?.vers" class="px-8 flex flex-col gap-12">
-            <p v-for="item in store.passage?.vers" :key="item?.id" class="font-bold tracking-normal hover:text-amber-300 transition-all ease-linear duration-150"
+            <p v-for="item in store.passage?.vers" :key="item?.id" class="font-bold tracking-normal hover:text-blue-600 transition-all ease-linear duration-150"
             :style="{fontSize: `${fontSize}rem`}">
                 {{item?.number}} - {{ item?.verse }}
             </p>
         </div>
         <div v-else class="px-8 flex flex-col gap-12">
           <p
-            class="font-bold tracking-normal hover:text-amber-300 transition ease-linear duration-150"
+            class="font-bold tracking-normal hover:text-blue-600 transition ease-linear duration-150"
             :style="{fontSize: `${fontSize}rem`}"
           >
             {{store.passage?.number}} {{ store.passage?.verse }}
           </p>
         </div>
       </div>
+      <div v-else class="h-[calc(100vh-144px)] w-full flex flex-col gap-4 items-center justify-center">
+        <div class="loader"></div>
+        <p class="text-gray-600 font-semibold">Cargando...</p>
+      </div>
     </div>
   </main>
 </template>
 
 <script>
+import BookDialog from '../components/BookDialog.vue';
+import { Label } from '@/components/ui/label'
+import {
+  NumberField,
+  NumberFieldContent,
+  NumberFieldDecrement,
+  NumberFieldIncrement,
+  NumberFieldInput,
+} from '@/components/ui/number-field'
 import setup from './hook';
 
 export default {
   name: 'HomeView',
+  components: {
+    BookDialog,
+    Label,
+    NumberField,
+    NumberFieldContent,
+    NumberFieldDecrement,
+    NumberFieldIncrement,
+    NumberFieldInput
+  },
   setup
 };
 </script>
