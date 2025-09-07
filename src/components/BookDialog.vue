@@ -71,7 +71,7 @@ export default {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="oldTestament">
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 mt-8">
+          <div class="grid grid-cols-1 grid-flow-col sm:grid-cols-2 md:grid-cols-4 grid-rows-8 gap-2 mt-8">
             <DialogClose
               as-child
               v-for="book in oldTestament"
